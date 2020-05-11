@@ -1,0 +1,31 @@
+plugins {
+	id 'java'
+}
+
+group = 'com.ps.app'
+version = '1.0'
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+
+	compile 'org.springframework:spring-tx:5.2.5.RELEASE'
+	compile 'org.springframework:spring-context:5.2.5.RELEASE'
+
+	testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
+	testImplementation( 'org.hamcrest:hamcrest-library:2.2')
+	testCompile('org.mockito:mockito-core:3.3.3')
+	testCompile('org.mockito:mockito-junit-jupiter:3.3.3')
+	compile group: 'com.github.javafaker', name: 'javafaker', version: '0.15'
+
+	implementation project(':domain')
+}
+
+test {
+	useJUnitPlatform()
+}

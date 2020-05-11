@@ -1,0 +1,83 @@
+server:
+  port: ${EUREKAPORT:8001}
+spring:
+  application:
+    name: formacion-server
+  profiles:
+    active: dev
+  datasource:
+    platform: mysql
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        format_sql: false
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    generate-ddl: false
+    show-sql: false
+  main:
+    show_banner: true
+  messages:
+    encoding: UTF-8
+eureka:
+  instance:
+    instance-ide: ${spring.application.name:${random.value}}
+  cliente:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+springdoc:
+  swagger-ui:
+    path: swagger-ui.html
+  api-docs:
+    path: /api-docs
+loggin:
+  level:
+    org:
+      hibernate:
+        SQL: error
+---
+spring:
+  profile: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/formacion?serverTimezone=America/Bogota&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: 123nose
+  jpa:
+    properties:
+      hibernate:
+        format_sql: false
+    show-sql: true
+name: db-dev
+enviroment: develop
+loggin:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+#---
+#spring:
+#  profile: test
+#  datasource:
+#    url: some-url-test
+#    username: some-username-test
+#    password: some-password-test
+#  main:
+#    show_banner: false
+#name: db-test
+#enviroment: test
+#---
+#spring:
+#  profile: prod
+#  datasource:
+#    url: some-url-prod
+#    username: some-username-prod
+#    password: some-password-prod
+#  main:
+#    show_banner: false
+#name: db-prod
+#enviroment: production
+#loggin:
+#  level:
+#    org:
+#      hibernate:
+#        SQL: error

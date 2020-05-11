@@ -1,0 +1,101 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.7.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+}
+
+group = 'com.ps.formacion.infra'
+version = '1.0'
+sourceCompatibility = '11'
+
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springCloudServicesVersion', "2.2.3.RELEASE")
+	set('springCloudVersion', "Hoxton.SR4")
+}
+
+dependencies {
+	implementation 'org.springdoc:springdoc-openapi-ui:1.3.9'
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+	// implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'io.pivotal.spring.cloud:spring-cloud-services-starter-circuit-breaker'
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'mysql:mysql-connector-java'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'org.springframework.amqp:spring-rabbit-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	implementation project(':app')
+	implementation project(':domain')
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "io.pivotal.spring.cloud:spring-cloud-services-dependencies:${springCloudServicesVersion}"
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+test {
+	useJUnitPlatform()
+}
+
+bootRun {}
+
+// make sure bootRun is executed when runDev task runs
+task runDev(dependsOn:bootRun) {
+	gradle.taskGraph.whenReady { graph ->
+		logger.lifecycle('>>> Setting spring.profiles.active to dev')
+		if (graph.hasTask(runDev)) {
+			bootRun {
+				args = ["--spring.profiles.active=dev"]
+			}
+		}
+	}
+}
+
+// make sure bootRun is executed when runTest task runs
+task runTest(dependsOn:bootRun) {
+	gradle.taskGraph.whenReady { graph ->
+		logger.lifecycle('>>> Setting spring.profiles.active to test')
+		if (graph.hasTask(runTest)) {
+			bootRun {
+				args = ["--spring.profiles.active=test"]
+			}
+		}
+	}
+}
+
+// make sure bootRun is executed when runProd task runs
+task runProd(dependsOn:bootRun) {
+	gradle.taskGraph.whenReady { graph ->
+		logger.lifecycle('>>> Setting spring.profiles.active to prod')
+		if (graph.hasTask(runProd)) {
+			bootRun {
+				args = ["--spring.profiles.active=prod"]
+			}
+		}
+	}
+}
