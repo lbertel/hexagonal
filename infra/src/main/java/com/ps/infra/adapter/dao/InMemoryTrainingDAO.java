@@ -1,11 +1,13 @@
 package com.ps.infra.adapter.dao;
 
 import com.ps.domain.model.dto.TrainingDTO;
+import com.ps.domain.model.entity.Training;
 import com.ps.domain.port.dao.TrainingDAO;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class InMemoryTrainingDAO implements TrainingDAO {
@@ -21,6 +23,11 @@ public class InMemoryTrainingDAO implements TrainingDAO {
         dtos.add(new TrainingDTO("The super me in existential dilemmas"));
 
         return dtos;
+    }
+
+    @Override
+    public Training save(UUID id, String name, Integer duration) {
+        return null;
     }
 
 }
